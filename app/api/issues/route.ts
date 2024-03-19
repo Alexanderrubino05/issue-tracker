@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/prisma/client";
+import { revalidatePath } from "next/cache";
 
 const createIssueSchema = z.object({
   title: z.string().min(1).max(255),
@@ -27,6 +28,8 @@ export async function createIssuePost(formData: FormData) {
       description: description,
     },
   });
+
+  revalidatePath("/issues");
 
   return {
     message: "Works",

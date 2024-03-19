@@ -7,10 +7,6 @@ interface IssueForm {
 }
 
 const NewIssuePage = () => {
-  // async function postIssue(formData: FormData) {
-  //   "use server";
-  // }
-
   return (
     <form
       className="max-w-xl space-y-4 flex flex-col"
