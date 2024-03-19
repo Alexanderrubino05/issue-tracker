@@ -1,3 +1,4 @@
+"use server";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/prisma/client";
@@ -7,16 +8,27 @@ const createIssueSchema = z.object({
   description: z.string().min(1),
 });
 
-export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const validation = createIssueSchema.safeParse(body);
-  if (!validation.success) {
-    return NextResponse.json(validation.error.errors, { status: 400 });
-  }
-
-  const newIssue = await prisma.issue.create({
-    data: { title: body.title, description: body.description },
+export async function createIssuePost(formData: FormData) {
+  const validatedFields = createIssueSchema.safeParse({
+    title: formData.get("title"),
+    description: formData.get("description"),
   });
 
-  return NextResponse.json(newIssue, { status: 201 });
+  // Return early if the form data is invalid
+  if (!validatedFields.success) {
+    return validatedFields.error.flatten().fieldErrors;
+  }
+
+  const { title, description } = validatedFields.data;
+
+  const newIssue = await prisma.issue.create({
+    data: {
+      title: title,
+      description: description,
+    },
+  });
+
+  return {
+    message: "Works",
+  };
 }

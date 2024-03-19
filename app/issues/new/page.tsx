@@ -1,16 +1,28 @@
-"use client";
 import React from "react";
-import { Button, TextArea, TextField } from "@radix-ui/themes";
+import { createIssuePost } from "@/app/api/issues/route";
+
+interface IssueForm {
+  title: string;
+  description: string;
+}
 
 const NewIssuePage = () => {
+  // async function postIssue(formData: FormData) {
+  //   "use server";
+  // }
+
   return (
-    <div className="max-w-xl space-y-3">
-      <TextField.Root>
-        <TextField.Input placeholder="Title" />
-      </TextField.Root>
-      <TextArea placeholder="Description" />
-      <Button>Submit New Issue</Button>
-    </div>
+    <form
+      className="max-w-xl space-y-4 flex flex-col"
+      action={createIssuePost}
+      method="POST"
+    >
+      <input type="text" placeholder="Title" name="title" />
+      <input type="description" placeholder="Description" name="description" />
+      <button type="submit" className="bg-red-500">
+        Submit
+      </button>
+    </form>
   );
 };
 
